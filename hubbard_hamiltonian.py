@@ -12,7 +12,7 @@ def hopping_hh():
     for i in range(spin_sites):
         if i<=spin_sites-2:
             hopping.append(([i,1],[(i+2)%spin_sites,0]))
-        if i>=2:
+        if i>2:
             hopping.append(([i,1],[(i-2)%spin_sites,0]))
     #print(np.array(hopping).shape)
     return np.array(hopping)
