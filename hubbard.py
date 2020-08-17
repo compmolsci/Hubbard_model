@@ -1,7 +1,7 @@
 import numpy as np
 import cmath
-from itertools import product
-from jw_bk import spin_sites
+
+from inp import spin_sites
 from Products import multiply_two_operators_jw, multiply_two_operators_bk, multiply_four_operators_jw, multiply_four_operators_bk
 from Products import clean_up
 
