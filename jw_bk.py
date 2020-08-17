@@ -1,14 +1,15 @@
 import numpy as np
 import cmath
-iota=complex(0,1)
+j=complex(0,1)
 X=np.array([[0,1],[1,0]])
-Y=np.array([[0,-iota],[iota,0]])
+Y=np.array([[0,-j],[j,0]])
 Z=np.array([[1,0],[0,-1]])
 I=np.array([[1,0],[0,1]]) 
-spin_sites= 4 # Make it 4 to study hydrogen molecular Hamiltonian/two site Hubbard model
+from inp import spin_sites
+#spin_sites= 4 # Make it 4 to study hydrogen molecular Hamiltonian/two site Hubbard model
 def paritybasis():
     return(np.tril(np.ones((spin_sites,spin_sites)),-1))
-    
+parity_basis=paritybasis()
 # function for calculating the beta matrices
 def bravyikitaevbasis():
     for k in range (0,spin_sites): 
@@ -27,37 +28,37 @@ def bravyikitaevbasis():
         c3=np.concatenate((c1,c2),axis=0)
         arr1=c3
     return(arr1[0:spin_sites,0:spin_sites])  
-       
+bk_basis=bravyikitaevbasis()
 # Evaluating beta inverse
 def inverse():
-    return(np.linalg.inv(bravyikitaevbasis()))%2
-
+    return(np.linalg.inv(bk_basis))%2
+inv=inverse()
 # Evaluating pi*beta inverse
 def pi_beta_inverse():
-    return(np.matmul(paritybasis(),inverse()))%2
-
+    return(np.matmul(parity_basis,inv))%2
+pi_beta_inv=pi_beta_inverse()
 # Parity set 
 def parityset():
-    return [np.nonzero(row)[0] for row in pi_beta_inverse()]
-
+    return [np.nonzero(row)[0] for row in pi_beta_inv]
+parity=parityset()
 # Update set
 def updateset():
    #print('update_set')
     #print(np.transpose(bravyikitaevbasis()))
-    return [np.nonzero(row)[0][1:] for row in np.transpose(bravyikitaevbasis())]
-
+    return [np.nonzero(row)[0][1:] for row in np.transpose(bk_basis)]
+update=updateset()
 # Flip set
 def flipset():
     #print('flip_set')
     #print(inverse())
-    return [np.nonzero(row)[0][:-1] for row in inverse()]
-
+    return [np.nonzero(row)[0][:-1] for row in inv]
+flip=flipset()
 # Remainder set
 def remainderset():
-    parity=parityset()
-    flip=flipset()
+    #parity=parityset()
+    #flip=flipset()
     return [list(set(parity[i])-set(flip[i])) for i in range(spin_sites)]
-
+remainder=remainderset()
 
 
 # Function for printing gate sequence of creation/annihilation operator (character form)
@@ -66,9 +67,9 @@ def write_string_of_gates_bk(op_def):
     op=op_def[1]
     string1=["I" for m in range(spin_sites)]
     string2=["I" for m in range(spin_sites)]
-    update=updateset()
-    parity=parityset()
-    remainder=remainderset()
+    #update=updateset()
+    #parity=parityset()
+    #remainder=remainderset()
     for i in range(spin_sites):
         for k in range (len(update[l])):
             if(i==update[l][k]):
@@ -90,11 +91,11 @@ def write_string_of_gates_bk(op_def):
             if (op==True): #True means dagger/creation
                 string1[i]="X"
                 string2[i]="Y"
-                a=-0.5*iota
+                a=-0.5*j
             else: #False means annihilation
                 string1[i]="X"
                 string2[i]="Y"
-                a=0.5*iota
+                a=0.5*j
     return ((0.5,string1),(a,string2))
 
 def write_string_of_gates_jw(op_def):
@@ -107,14 +108,14 @@ def write_string_of_gates_jw(op_def):
             string1.append('Z')
             string2.append('Z')
         elif (k==l):
-            if op==True:#True means dagger/creation operator
+            if op:#True means dagger/creation operator
                 string1.append('X')
                 string2.append('Y')
-                a=-0.5*iota
+                a=-0.5*j
             else: #False means annihilation
                 string1.append('X')
                 string2.append('Y')
-                a=0.5*iota
+                a=0.5*j
         else:
             string1.append('I')
             string2.append('I')
@@ -124,6 +125,3 @@ def write_string_of_gates_jw(op_def):
 #print(write_string_of_gates_jw([2,False]))
 #print("Bravyi-Kitaev:")
 #print(write_string_of_gates_bk([2,False]))
-    
-
-

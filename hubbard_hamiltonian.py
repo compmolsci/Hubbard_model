@@ -1,9 +1,9 @@
 import numpy as np
 import cmath
 from itertools import product
-from jw_bk import spin_sites
-from Products import multiply_two_operators_jw, multiply_two_operators_bk, multiply_four_operators_jw, multiply_four_operators_bk
-from Products import clean_up
+from inp import spin_sites
+from products import multiply_two_operators, multiply_four_operators
+from products import clean_up
 
 #Hopping terms
 print("Hopping terms:")
@@ -27,7 +27,7 @@ m=[]  # m stores the multiplied string for hopping part of the Hamiltonian
 for i in range (hopping.shape[0]):
     p=hopping[i][0]
     q=hopping[i][1]
-    m.append(multiply_two_operators_jw([p,True],[q,False]))
+    m.append(multiply_two_operators([p,True],[q,False]))
 print(m)
 
 
@@ -48,7 +48,7 @@ for i in range (onsite.shape[0]):
     q=onsite[i][1]
     r=onsite[i][2]
     s=onsite[i][3]
-    m1.append(multiply_four_operators_jw([p,True],[q,False],[r,True],[s,False]))
+    m1.append(multiply_four_operators([p,True],[q,False],[r,True],[s,False]))
 print(m1)
 
 
