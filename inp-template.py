@@ -101,7 +101,7 @@ if hamiltonian == 'hubbard':
 
 
 if hamiltonian=='molecular':
-    dist=1.1
+    dist
     #Specify the molecule, according to pyscf. Input atoms, unit of distance, coordinates and basis set
     mol=gto.M(unit='ANGSTROM',atom='''H 0 0 0; H 0 0 '''+str(dist),basis='sto-3g' )
     #mol=gto.M(unit='Bohr',atom='''H 0 0 1.41; H 0 0 -1.41''',basis='sto-3g')
